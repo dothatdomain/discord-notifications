@@ -1,7 +1,8 @@
 import {MAX_BODY,githubMessages,customMessages,verifySignature,validWebhook,message,relevantPatch} from './routing.mjs';
 const json=(value,status=200)=>Response.json(value,{status,headers:{'cache-control':'no-store'}});
 const hash=async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',typeof value==='string'?new TextEncoder().encode(value):value)),n=>n.toString(16).padStart(2,'0')).join('');
-const config=env=>JSON.parse(env.PROJECT_CONNECTIONS||'{}');
+// Keep each encrypted value below Cloudflare's 5 KB variable limit.
+const config=env=>Object.assign({},...['PROJECT_CONNECTIONS','PROJECT_CONNECTIONS_2','PROJECT_CONNECTIONS_3'].map(key=>JSON.parse(env[key]||'{}')));
 const stub=(env,name)=>env.NOTIFICATIONS.get(env.NOTIFICATIONS.idFromName(name));
 export default {
   async fetch(request,env) {

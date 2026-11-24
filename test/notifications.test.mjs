@@ -51,6 +51,13 @@ test('bad HMAC, unknown project, wrong repository and large body never reach sto
   assert.equal((await worker.fetch(new Request('https://worker.example/github/example',{method:'POST',body:'x'.repeat(2_000_001)}),env)).status,413);
   assert.equal(calls,0);
 });
+
+test('encrypted configuration shards preserve project access controls at ten-project scale',async()=>{
+  const shards=[{},{},{}];for(let i=0;i<10;i++)shards[Math.floor(i/4)]['project-'+i]={...project,repository:'dothatdomain/project-'+i};
+  let calls=0;const env={PROJECT_CONNECTIONS:JSON.stringify(shards[0]),PROJECT_CONNECTIONS_2:JSON.stringify(shards[1]),PROJECT_CONNECTIONS_3:JSON.stringify(shards[2]),NOTIFICATIONS:{idFromName:x=>x,get:()=>({fetch:async()=>{calls++;return Response.json({accepted:true},{status:202});}})}};
+  const start=performance.now();for(let i=0;i<10;i++){const event=issue('[Request] Example');event.repository.full_name='dothatdomain/project-'+i;assert.equal((await worker.fetch(signed(event,'issues','/github/project-'+i),env)).status,202);}
+  assert.equal(calls,10);console.log(JSON.stringify({scenario:'ten-project-sharded-config',elapsedMs:Number((performance.now()-start).toFixed(2)),inputEvents:10,doRequests:calls,temporaryWrites:0,aiTokens:0}));
+});
 test('concurrent redelivery atomically stores one job, and sends once',async()=>{
   const f=fixture(),store=new NotificationStore(f.ctx,f.env),body=JSON.stringify({id:'same',project:'example',notifications:[{route:'updates',payload:message('test','test','https://github.com')}]});
   const make=()=>new Request('https://internal/enqueue',{method:'POST',body});

@@ -1,0 +1,129 @@
+{
+  "guildId": "1574801258232152114",
+  "projects": [
+    {
+      "key": "dothatdomain-web",
+      "name": "DoThatDomain",
+      "category": "dothatdomain🌐",
+      "repository": "dothatdomain/dothatdomain-web",
+      "channels": {
+        "updates": "1574802412814868490",
+        "debugging": "1574802450060284045",
+        "requests": "1574802764968497222",
+        "ideas": "1574802430749577338"
+      }
+    },
+    {
+      "key": "expresscouriers",
+      "name": "Express Couriers",
+      "category": "express-couriers🚚",
+      "repository": "dothatdomain/expresscouriers",
+      "channels": {
+        "updates": "1574801899205431357",
+        "debugging": "1574801978150883358",
+        "requests": "1574802742310862991",
+        "ideas": "1574801933972017212"
+      }
+    },
+    {
+      "key": "viellos",
+      "name": "Viellos",
+      "category": "viellos✂️",
+      "repository": "dothatdomain/viellos",
+      "channels": {
+        "updates": "1574803415144333343",
+        "debugging": "1574803585173164062",
+        "requests": "1574803631935586415",
+        "ideas": "1574803544945459200",
+        "wix-patches": "1574813147527913512",
+        "bookings": "1574813247687762090"
+      }
+    },
+    {
+      "key": "school-wristbands",
+      "name": "School Wristbands",
+      "category": "school-wristbands🎒",
+      "repository": "dothatdomain/school-wristbands",
+      "channels": {
+        "updates": "1574804656008200374",
+        "debugging": "1574804745841942588",
+        "requests": "1574804795964002445",
+        "ideas": "1574804697091538944",
+        "wix-patches": "1574813096839479326",
+        "orders": "1574812738834665572"
+      }
+    },
+    {
+      "key": "promo-bands",
+      "name": "Promo Bands",
+      "category": "promo-bands⭕",
+      "repository": "dothatdomain/promo-bands",
+      "channels": {
+        "updates": "1574804930764734494",
+        "debugging": "1574805019604029563",
+        "requests": "1574805051933724823",
+        "ideas": "1574804970925203616"
+      }
+    },
+    {
+      "key": "ytmp3",
+      "name": "YTMP3",
+      "category": "ytmp3🎵",
+      "repository": "dothatdomain/ytmp3",
+      "channels": {
+        "updates": "1574805453299515473",
+        "debugging": "1574805527865593918",
+        "requests": "1574805563500531732",
+        "ideas": "1574805487499747438"
+      }
+    },
+    {
+      "key": "cadence",
+      "name": "Cadence",
+      "category": "cadence🎹",
+      "repository": "dothatdomain/cadence",
+      "channels": {
+        "updates": "1574805787627225099",
+        "debugging": "1574805867138777239",
+        "requests": "1574805921689903155",
+        "ideas": "1574805824910659744"
+      }
+    },
+    {
+      "key": "3d-god-game",
+      "name": "3D God Game",
+      "category": "3d-god-game☁️",
+      "repository": "dothatdomain/3d-god-game",
+      "channels": {
+        "updates": "1574806617168552126",
+        "debugging": "1574806705559052368",
+        "requests": "1574806739067478119",
+        "ideas": "1574806657479876719"
+      }
+    },
+    {
+      "key": "wardenfall",
+      "name": "Wardenfall",
+      "category": "wardenfall⚜️",
+      "repository": "dothatdomain/wardenfall",
+      "channels": {
+        "updates": "1574807054810620144",
+        "debugging": "1574807121684332614",
+        "requests": "1574807157369610382",
+        "ideas": "1574807087429718167"
+      }
+    },
+    {
+      "key": "ms-rewards-farmer",
+      "name": "MS Rewards Farmer",
+      "category": "ms-rewards-farmer🧑‍🌾",
+      "repository": "dothatdomain/ms-rewards-farmer",
+      "channels": {
+        "updates": "1574807394679132220",
+        "debugging": "1574807456058712094",
+        "requests": "1574807494960746508",
+        "ideas": "1574807425855262824"
+      }
+    }
+  ]
+}

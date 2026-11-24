@@ -28,6 +28,16 @@ test('merges, pushes and failures have concrete status without running code',()=
   assert.equal(githubMessages('workflow_run',{workflow_run:{conclusion:'success'}},'Example').length,0);
   assert.equal(githubMessages('workflow_run',{workflow_run:{conclusion:'failure',name:'Build'}},'Example')[0].route,'debugging');
 });
+
+test('issue creation administrative events produce one enqueue and two posts',async()=>{
+  const opened=issue('[Request] Export');
+  const events=[opened,{...opened,action:'assigned'},{...opened,action:'status_changed'},{...opened,action:'labeled',label:{name:'status:in-progress'}},{...opened,action:'labeled',label:{name:'area:collaboration'}}];
+  let calls=0,posts=0;
+  const env={PROJECT_CONNECTIONS:JSON.stringify({example:project}),NOTIFICATIONS:{idFromName:x=>x,get:()=>({fetch:async(_url,opt)=>{calls++;posts+=JSON.parse(opt.body).notifications.length;return Response.json({accepted:true},{status:202});}})}};
+  const start=performance.now();for(const event of events)assert((await worker.fetch(signed(event),env)).ok);
+  assert.equal(calls,1);assert.equal(posts,2);
+  console.log(JSON.stringify({scenario:'issue-open-plus-assignment-and-labels',inputEvents:5,elapsedMs:Number((performance.now()-start).toFixed(2)),doRequests:calls,discordPosts:posts,previousDoRequests:5,previousDiscordPosts:6,temporaryWrites:0,aiTokens:0}));
+});
 test('no @mentions and no secrets or customer contact fields in order messages',()=>{
   const value=customMessages({type:'order',reference:'123',status:'paid',email:'private@example.com',address:'Private address'},'School')[0].payload;
   assert.deepEqual(value.allowed_mentions,{parse:[]});assert.doesNotMatch(JSON.stringify(value),/private@example|Private address/);
@@ -46,7 +56,7 @@ test('concurrent redelivery atomically stores one job, and sends once',async()=>
   const make=()=>new Request('https://internal/enqueue',{method:'POST',body});
   const results=await Promise.all([store.fetch(make()),store.fetch(make())]);assert(results.every(r=>r.status===202));assert.equal(f.ctx.storage.sql.exec('SELECT count(*) AS n FROM receipts').one().n,1);
   f.ctx.storage.sql.exec('UPDATE receipts SET due=0');const original=globalThis.fetch;let sends=0;
-  globalThis.fetch=async()=>{sends++;return new Response('{}',{status:200});};
+  globalThis.fetch=async(_url,options)=>{assert.equal(options.redirect,'manual');sends++;return new Response('{}',{status:200});};
   try{await store.alarm();await store.alarm();assert.equal(sends,1);assert.equal(f.ctx.storage.sql.exec('SELECT state FROM receipts').one().state,'sent');}finally{globalThis.fetch=original;f.db.close();}
 });
 test('429 retry is bounded and uncertain network errors are diagnosed, never retried',async()=>{

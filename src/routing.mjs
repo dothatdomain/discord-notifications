@@ -27,8 +27,11 @@ export function githubMessages(kind,p,projectName) {
     if(commits.some(c=>/^fix(?:\([^)]*\))?[!:]/i.test(c.message||'')))add('debugging','fix pushed',body,p.compare);
   } else if(kind==='issues') {
     const issue=p.issue||{};
-    add('updates',`issue #${issue.number} ${change}`,`${text(issue.title)}\nBy ${actor}`,issue.html_url);
+    // Ignore administrative events that accompany one issue creation.
     const route=issueRoute(issue);
+    if(!['opened','reopened','closed','edited','deleted','transferred','labeled','unlabeled'].includes(change))return result;
+    if(['labeled','unlabeled'].includes(change)&&!types[String(p.label?.name||'').toLowerCase()])return result;
+    add('updates',`issue #${issue.number} ${change}`,`${text(issue.title)}\nBy ${actor}`,issue.html_url);
     const relevantLabel=change!=='labeled'||types[String(p.label?.name||'').toLowerCase()]===route;
     const relevantEdit=change!=='edited'||p.changes?.title;
     if(route && relevantLabel && relevantEdit && ['opened','reopened','closed','labeled','edited'].includes(change)) {

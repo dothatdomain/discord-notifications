@@ -1,0 +1,11 @@
+{
+  "name": "dothatdomain-notifications",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-11-24",
+  "workers_dev": true,
+  "limits": {"cpu_ms": 50},
+  "durable_objects": {"bindings": [{"name": "NOTIFICATIONS", "class_name": "NotificationStore"}]},
+  "migrations": [{"tag": "v1", "new_sqlite_classes": ["NotificationStore"]}],
+  "triggers": {"crons": ["17 8 * * *"]},
+  "observability": {"enabled": true, "head_sampling_rate": 0.1}
+}

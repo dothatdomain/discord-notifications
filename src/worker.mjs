@@ -74,8 +74,9 @@ export class NotificationStore {
         if(!validWebhook(webhook)){sql.exec("UPDATE receipts SET state='failed',diagnostic='Destination configuration invalid' WHERE id=?",job.id);continue;}
         sql.exec("UPDATE receipts SET state='sending' WHERE id=?",job.id);
         let response;
-        try{response=await fetch(webhook+'?wait=true',{method:'POST',redirect:'error',headers:{'content-type':'application/json'},body:JSON.stringify(item.payload),signal:AbortSignal.timeout(10000)});}catch {
-          sql.exec("UPDATE receipts SET state='uncertain',diagnostic='Transport result uncertain: inspect Discord before replay' WHERE id=?",job.id);continue;
+        try{response=await fetch(webhook+'?wait=true',{method:'POST',redirect:'error',headers:{'content-type':'application/json'},body:JSON.stringify(item.payload),signal:AbortSignal.timeout(10000)});}catch(error) {
+          const reason=String(error?.message||'Unknown transport error').replace(/https?:\/\/[^\s"'<>]+/g,'[URL redacted]').replace(/[A-Za-z0-9_.-]{40,}/g,'[value redacted]').slice(0,200);
+          sql.exec("UPDATE receipts SET state='uncertain',diagnostic=? WHERE id=?",'Transport result uncertain ('+String(error?.name||'Error')+'): '+reason+'; inspect Discord before replay',job.id);continue;
         }
         if(response.ok) {
           await response.arrayBuffer();const position=job.position+1;
